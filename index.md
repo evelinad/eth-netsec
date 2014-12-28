@@ -6,3 +6,5 @@ Network Security, ETH Zurich, AS14
 - [Topic 3: Firewalls, NAT, IDS/IPS](topic3.md)
 - [Topic 4: Domain Name System (DNS)](topic4.md)
 - [Topic 5: Availability, DoS & Secure Channels (VPN, SSH)](topic5.md)
+- Topic 6: SSL/TLS (TODO, jumped over because same as in InfSec last term)
+- [Topic 7: Web Application Security](topic7.md)

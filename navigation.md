@@ -9,4 +9,5 @@
 [Topic 3](topic3.md)
 [Topic 4](topic4.md)
 [Topic 5](topic5.md)
+[Topic 7](topic7.md)
 [Todos](todo.md)
