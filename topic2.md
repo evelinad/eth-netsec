@@ -1,4 +1,4 @@
-# Lecture 2: Identity and Authentication
+# Topic 2: Identity and Authentication
 ## Identity & Identity Theft
 - Identity: specifies a principle, a unique entity
 	- Individuals (e.g. person's name)

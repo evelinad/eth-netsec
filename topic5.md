@@ -1,4 +1,4 @@
-# Lecture 5: Availability, DoS & Secure Channels (VPN, SSH)
+# Topic 5: Availability, DoS & Secure Channels (VPN, SSH)
 
 ## Availability
 - Service Level Agreement (SLA) reliability levels

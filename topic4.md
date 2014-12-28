@@ -1,4 +1,4 @@
-# Lecture 4: Domain Name System (DNS)
+# Topic 4: Domain Name System (DNS)
 
 ## Basics
 - Client-Server application

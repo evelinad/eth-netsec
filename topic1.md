@@ -1,4 +1,4 @@
-# Lecture 1: (In)security, Risk and Lifecycle of Vulnerabilities
+# Topic 1: (In)security, Risk and Lifecycle of Vulnerabilities
 ## (In)security Landscape
 - Complexity huge problem
 - System's security is equal to the weakest link

@@ -1,4 +1,4 @@
-# Lecture 3: Firewalls, NAT, IDS/IPS
+# Topic 3: Firewalls, NAT, IDS/IPS
 
 ## Firewalls
 - Hardware or software configured to permit, deny or proxy data through a computer network
