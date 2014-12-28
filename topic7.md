@@ -78,3 +78,21 @@
 - Command/Shell injection targets operating system
 - XSS targets browser
 - SQL injection targets database
+
+## Cross-Site Scripting
+
+### Same Origin Policy
+- Script can only access content and properties (e.g. cookie, DOM object, etc.) of document loaded from the same origin as the document containing the script
+- Same origin means:
+	- same protocol
+	- same hostname
+	- same port
+- If a document loads a script from another origin, this script can access the document it was loaded by
+- AJAX requests to other URL than the origin of the script not allowed. However target of request can allow requests from other domain by providing specific HTTP HEADER information as answer to a HTTP OPTIONS request by the client
+
+### Cross-Site Scripting (XSS)
+- Happens if web application takes input and sends it to browser without validating/encoding it
+- Used to inject code into web page
+- Injected code executed inside victim's browser
+- Can hijack user's session, deface web site, introduce worms, etc.
+- Targets the user, not the system itself
