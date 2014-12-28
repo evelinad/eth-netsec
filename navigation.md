@@ -11,4 +11,5 @@
 [Topic 5](topic5.md)
 [Topic 7](topic7.md)
 [Topic 8](topic8.md)
+[Topic 9](topic9.md)
 [Todos](todo.md)

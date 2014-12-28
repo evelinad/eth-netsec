@@ -9,3 +9,4 @@ Network Security, ETH Zurich, AS14
 - Topic 6: SSL/TLS (TODO, jumped over because same as in InfSec last term)
 - [Topic 7: Web Application Security](topic7.md)
 - [Topic 8: Malware](topic8.md)
+- [Topic 9: Security Ecosystem & Detection Failures](topic9.md)
