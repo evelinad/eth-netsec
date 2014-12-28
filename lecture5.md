@@ -1,0 +1,113 @@
+# Lecture 5: Availability, DoS & Secure Channels (VPN, SSH)
+
+## Availability
+- Service Level Agreement (SLA) reliability levels
+	- 99% results in 3.5 days downtime per year
+	- 99.9% results in 9 hours downtime per year
+	- 99.99% results in 53 minutes downtime per year
+	- 99.999% results in 5 minutes downtime per year
+	- 99.9999% results in 31 seconds downtime per year
+- Redundancy
+	- removes single point of failure
+	- should be distributed across geographical diverse locations
+	- should have multiple internet connections available
+	- fast fail-over important, remove "bad" nodes as fast as possible from system
+- Failure resilience
+	- system tolerant to temporary failures
+	- graceful degradation
+- Over provisioning
+	- plan resources (e.g. internet connection's bandwidth) to cover extreme peak loads
+	- plan how to get additional resources in case it's needed
+	- use of scalable content distribution networks
+- Monitoring, fast recovery
+	- immediate failure detection and alerting
+	- experts 24/7 around to respond
+	- keep documentation, tools and other resources ready for fast recovery
+
+### Denial of Service (DoS)
+- Aims to prevent legitimate users from accessing a specific service
+- Multiple techniques available
+	- Resource starvation
+		- Request excessive memory or disk space
+		- Request excessive number of CPU intense tasks
+		- Saturate bandwidth
+	- Spoofing
+	- Amplification
+	- Reflector attack
+	- Distributed attack
+	- Protocol/Service misuse
+- SYN Flood Attack
+	-  Results in resource starvation
+	-  Send lots SYN packets
+	-  Receiver keeps track of SYN packets received because of TCP three-way handshake
+	-  Results in full connection table, no other connections possible
+	-  Countermeasure: SYN Cookie
+		-  Particular choice of TCP sequence number, selected by server
+		-  No special connection table needed
+- Compression bomb
+	- Small archive file resulting in huge amount of decompressed data
+	- Naïve antivirus scanner might try to uncompress for checks and cause DoS
+	- Examples exist for ZIP, HTML, GIF, PNG, etc. files
+	- Counter through decompression size limitation, limit depth, add decompression timeout
+- Reflector Attacks
+	- Use vulnerable service that sends a larger request than the original request send to service. Use of spoofed initial request so answer sent to victim
+	- Use vulnerable service that sends lots of responses for a single request. Again use spoofed source so answer is sent to victim
+
+## Secure Channels
+- Secure channel properties: authentic and confidential
+- Link Layer: hardware encryption
+	- secures *all* traffic over a link
+	- usually implemented in hardware
+	- (pro) performant
+	- (pro) all layers above get seamless security
+	- (con) every link must be secured
+	- (con) must trust operators of links
+- Internet Layer: IPSec, OpenVPN
+	- secures traffic over multiple links between two end points
+	- IPSec part of IPv6
+	- (pro) seamless security to application and transport layers
+	- (con) complex configuration on multi-user machines
+	- (con) tunnel mode security only part of one route
+- Transport Layer: SSL/TLS
+	- Implementation done in end-hosts
+	- (pro) possible to add to existing applications
+	- (pro) easier to configure and more portable than internet layer
+	- (con) protocol specific usually (e.g. only TCP, but not UDP)
+	- (con) Applications must be aware of security used
+- Application Layer: PGP, GPG, Skype, ...
+	- Implemented in end-hosts
+	- (pro) extend application, operating system not involved
+	- (pro) applications understand data and can provide appropriate security
+	- (con) security designed for each application separately
+
+### Virtual Private Network (VPN)
+- Interconnect networks/machines over existing networks in a secure manner
+- Uses public network for transportation
+- Crypto used to protect data sent over public network
+- Provides confidentiality and authenticity
+- IP based VPN
+	- Transport mode
+		- Used usually for end-to-end communication between hosts, not networks
+		- Encrypted and authenticate payload
+- IP in IP Encapsulation
+	- Multiple LANs appear to be adjacent
+	- Non-routable addresses (private ones) become routable
+	- Tunnel Mode
+		- Encapsulates entire IP packet within IP packet
+		- Tunnel from one Gateway to another
+		- Inner IP packet can't be read while traveling through insecure WAN (packet is encrypted, authenticated)
+
+### Secure Shell (SSH)
+- Usually used for remote logins and encrypted file transfer
+- Open protocol
+- Does full negotiation of encryption, integrity, key exchange, compression and public key algorithms and formats
+- Architecture
+	- SSH-Connection Protocol: connection multiplexing
+	- SSH-Authentication Protocol: client authentication
+	- SSH-Transport Protocol: server authentication, confidentiality, integrity
+- Port Forwarding possible to secure otherwise insecure protocols
+- SSH does not counter following attacks
+	- Weak passwords, password cracking in general
+	- IP and TCP attacks, SSH operates on top of TCP
+	- Traffic analysis
+	- Software vulnerabilities
