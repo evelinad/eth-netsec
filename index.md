@@ -8,3 +8,4 @@ Network Security, ETH Zurich, AS14
 - [Topic 5: Availability, DoS & Secure Channels (VPN, SSH)](topic5.md)
 - Topic 6: SSL/TLS (TODO, jumped over because same as in InfSec last term)
 - [Topic 7: Web Application Security](topic7.md)
+- [Topic 8: Malware](topic8.md)
