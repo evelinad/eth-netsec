@@ -129,3 +129,104 @@
 		-  Paths *must* be reset periodically
 		-  In case of onion routing first and last machine on path needed
 		-  In case of mixnet, all machines on path required
+
+## Reading Material
+### Authentication Solutions
+- TAN
+	- "Transaction Authentication Number"
+	- List of "large" amount of numbers (e.g. 100) printed
+	- Each TAN used only once
+	- Each login requires one TAN that was not used yet
+	- New list send if TANs go out
+	- Attacks
+		- MitM
+		- Eavesdropping on TAN list
+		- DoS if TAN supply prevented
+- iTAN
+	- As TAN, but each TAN is indexed
+	- Login process will request specific TAN
+	- Minimises possibility of Phishing
+	- Same attack vectors as already stated for TAN
+- Entrust Card
+	- Similar to iTAN; TANs are in a grid
+	- User receives three (x,y)-coordinates and fills form with the three TANs referenced by the coordinates
+- Hardware Token
+	- Piece of hardware with a small display
+	- Shows a time dependent one-time code
+	- Some tokens use sequence of codes that are not time dependent and show new code on each activation
+	- Some tokens require a PIN to be entered before code is shown
+	- Attacks
+		- MitM
+		- Token can get out of sequence (DoS)
+		- Battery might end (DoS)
+- Software Token
+	- Similar to hardware tokens
+	- Piece of software running on PC, Smartphone, etc.
+	- Works well for time based tokens
+	- Attacks:
+		- MitM
+		- Devices need power (DoS)
+		- Token might get out of sync (DoS)
+- RFID Tag
+	- Similar to smart cards, but less sophisticated
+	- Reader can basically only check the presence of RFID Tag
+	- Attacks
+		- MitM: (e.g. devices might be cloned)
+- 2nd Communication Channel (mTAN)
+	- Uses two channels (e.g. website content and SMS)
+	- Also known as "Mobile TAN"
+	- Second channel doesn't have to be a mobile phone, but can also be E-Mail
+	- User enters identity into first channel, then gets a message over second channel and has to enter the received value
+- Photo Identification Card
+	- Examples include identification card, government issued license or other kinds of photo IDs
+	- Typically used offline with a person verifying identity
+
+### Identity Theft
+- Identity theft poses a economic and security risk
+- Identity fraud: crimes involving use of false identification. However, not necessarily means of identification belonging to another person.
+- Identity theft: specific form of identity fraud. Use of personally identifiable information of someone else. Often affects also the life of the victim whose identity was stolen.
+
+## Exercise Session: Break BGP
+- Attacking the routing control of the internet can bring down large parts of the internet
+- BGP
+	- "Border Gateway Protocol"
+	- Internet is network of autonomous networks (AS)
+	- Internal routing inside AS is well known and readily available
+	- Path-vector protocol, routing decision based on path, network policies and rule-sets
+	- BGP used to exchange reachability information and enforce their policies across ASes
+	- iBGP: internal BGP, used inside an AS
+	- eBGP: external BGP, used outside an AS, between ASes
+	- Uses TCP
+- Vulnerable to TCP attacks
+- TCP Reset Attack
+	- Two parties have a TCP connection open
+	- Attacker sends a TCP Reset packet to one host with the source address and port of the other host
+	- Host receiving the packet will close the connection
+	- Attacker needs to know the source and destination address and port, also guess sequence number in the current receiving window
+	- Against BGP
+		- destination port known (BGP Port 179)
+		- Source port must be guessed, but we have additional knowledge
+			- Not less than 1024
+			- Operating system's port selection paatern often predictable
+			- Use port scans
+		- Source/destination IP addresses can be found trough...
+			- `traceroute` from multiple sources
+			- Publicly available AS information
+			- Other network topology projects collecting information
+			- Social engineering
+		- 32-bit Sequence number: Usual window size is 16384
+- In case attack succeeds
+	- BPG peers lose connection
+	- Release of BGP resources
+	- BGP peers must remove all routes learned from each other
+	- Recovery takes minutes to hours
+- Countermeasures
+	- MD5 Signature Option
+		- Authenticate identity of remote BGP neighbour
+		- Difficult for attacker because password included in MD5 digest, password never appears in stream
+		- For each segment contains 16-byte MD5 digest of the TCP header, data, etc.
+		- (con) Password must be somehow securely stores
+		- (con) Somehow password must be securely given to neighbours
+		- (con) Password should be "good"
+		- (con) Additional work done on router to authenticate/calculate -> potential for DoS
+		- (con) MD5 has collision search vulnerability
