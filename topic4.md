@@ -82,3 +82,35 @@
 	- RRSIG: digital signature of the answered resource record set
 	- DNSKEY: stores public key
 	- DS: delegation signer, glues the trust chain, used by higher level entries
+
+## Guest Lecture
+- Browsers / operating systems trust lots root CA certificates
+- Each of them can issue certificate for any domain
+- Each of them can also issue certificates that allow the owner to issue certificates for any domain
+- So we get hundreds of equally trusted parties
+- Several levels of verification done by CAs
+	- Domain Validation (DV)
+	- Extended Validation (EV)
+	- And levels in between ("Premium", "High assurance", etc.)
+- Usually large window between incident discovery by CA and response
+- Incidents often discovered not right away because no incident detection mechanisms in place
+- No automated incident reporting mechanisms installed (e.g. if pinned certificated does not match the one provided by server no reporting done by browser)
+- Basic idea is to minimise window of opportunity for attacker
+	- Makes it more expensive for the attacker to run attacks
+	- Completely preventing attacks not possible
+- Owner of domain knows which certificate is the right one
+- Extend user's browser to report incidents, not everyone has to participate, interested in a large number
+
+### Certificate Transparency
+- All publicly accessible SSL/TLS endpoints' certificates become public knowledge
+- Hols CAs publicly accountable
+- Doesn't add additional entity we have to trust, more of an observer
+- Certificate Transparency Log
+	- Append-only log
+	- Lists certificates
+	- Server verifies certificate chain
+	- Periodically new certificates are added and signed
+	- Log is publicly available
+	- Can't say if a certificate is "good" or "bad", just informs about the presence of it
+	- Merkle Tree used as data structure
+
