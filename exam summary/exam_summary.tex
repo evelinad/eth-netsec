@@ -1,0 +1,89 @@
+\documentclass[a4paper,twocolumn]{article}
+\usepackage[ngerman]{babel}
+\usepackage{geometry}
+\usepackage{amsthm}
+\usepackage{enumitem}
+\usepackage[utf8]{inputenc}
+\usepackage{fontenc}
+\usepackage{color}
+\usepackage{soul}
+\usepackage{soulutf8}
+
+\setlist{nolistsep}
+
+% Allows fancy stuff in the page header
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+% multirow and multicol
+\usepackage{multirow}
+\usepackage{multicol}
+\columnsep24pt
+\columnseprule0.1pt
+
+% parindent
+\parindent0px
+\parskip3pt
+
+\geometry{top=1cm, headsep=0pt,headheight=0.5cm, % top part
+bottom=1cm, footskip=0.5cm, % bottom part
+left=0.4cm,right=0.4cm} % left / right part
+
+% fancy header
+\renewcommand{\footrulewidth}{0pt}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\headwidth}{\textwidth}
+
+\tabcolsep=0.1cm
+
+% Redefine section commands to use less space
+\makeatletter
+\renewcommand{\section}{\@startsection{section}{1}{0mm}%
+                                {-1ex plus -.5ex minus -.2ex}%
+                                {0.5ex plus .2ex}%x
+                                {\normalfont\large\bfseries}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{0mm}%
+                                {-1explus -.5ex minus -.2ex}%
+                                {0.5ex plus .2ex}%
+                                {\normalfont\normalsize\bfseries}}
+\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{0mm}%
+                                {-1ex plus -.5ex minus -.2ex}%
+                                {1ex plus .2ex}%
+                                {\normalfont\small\bfseries}}
+\makeatother
+
+\usepackage{empheq}
+\begin{document}
+\twocolumn
+\newpage
+\setcounter{page}{1}
+\pagestyle{plain}
+
+\section{OSI model}
+\begin{table}[h]
+\begin{tabular}{llll}
+\textbf{Nr} & \textbf{Name} & \textbf{Protocols}      & \textbf{Data Unit} \\ \hline
+7           & Application   & HTTP, FTP, SMTP         & Data               \\ \hline
+6           & Presentation  & SSL/TLS, MIME           & Data               \\ \hline
+5           & Session       & SOCKS, RPC, PAP         & Data               \\ \hline
+4           & Transport     & TCP, UDP                & Segment            \\ \hline
+3           & Network       & IPv4, IPv6, IPsec, ICMP & Packet/Datagram    \\ \hline
+2           & Data Link     &                         & Bit/Frame          \\ \hline
+1           & Physical      &                         & Bit                \\ \hline
+\end{tabular}
+\end{table}
+
+\section{SSL/TLS Key Exchange}
+\begin{description}
+\item[RSA Key Exchange (case 1)]: client creates pre-master secret for session and sends it encrypted with server's public key to server. Secure against active/passive attacks, no PFS, no contributory key agreement.
+
+\item[RSA Key Exchange (case2)]: server has RSA key that can only sign. Create temporary public/private keypair that is used to exchange a client generated key. Secure against active/passive attacks, PFS, no contributory key agreement.
+
+\item[Anonymous Diffie-Hellman] uses Diffie-Hellman, but without authentication. Because the keys used in the exchange are not authenticated, the protocol is susceptible to Man-in-the-Middle attacks. Provides Perfect Forward Secrecy (PFS). Not secure against passive attacks. Contributory key agreement.
+
+\item[Fixed Diffie-Hellman] embeds the server's public Diffie-Hellman parameter in the certificate, and the CA then signs the certificate. That is, the certificate contains the Diffie-Hellman public-key parameters, and those parameters never change. Secure against passive/active attacks, no PFS, contributory key agreement.
+
+\item[Ephemeral Diffie-Hellman] uses temporary, public keys. Each instance or run of the protocol uses a different public key. The authenticity of the server's temporary key can be verified by checking the signature on the key. Secure against passive/active attacks, PFS, contributory key agreement.
+\end{description}
+
+\end{document}
