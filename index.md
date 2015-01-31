@@ -11,3 +11,4 @@ Network Security, ETH Zurich, AS14
 - [Topic 8: Malware](topic8.md)
 - [Topic 9: Security Ecosystem & Detection Failures](topic9.md)
 - [Topic 10: E-Mail Spam](topic10.md)
+- [Exam Summary (used in the exam)](https://github.com/groggi/eth-netsec/blob/gh-pages/exam%20summary/exam_summary.pdf)
