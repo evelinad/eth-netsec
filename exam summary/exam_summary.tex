@@ -1,19 +1,33 @@
 \documentclass[a4paper,twocolumn]{article}
 \usepackage[ngerman]{babel}
 \usepackage{geometry}
-\usepackage{amsthm}
-\usepackage{enumitem}
 \usepackage[utf8]{inputenc}
-\usepackage{fontenc}
-\usepackage{color}
-\usepackage{soul}
-\usepackage{soulutf8}
+\usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage[draft]{graphicx}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage[hyperfootnotes=false,hidelinks]{hyperref}
+\usepackage[font=scriptsize,labelfont=bf]{caption}
+\usepackage[font=scriptsize]{subcaption}
+\usepackage[bottom,stable]{footmisc}
+\usepackage{array}
+\usepackage{amsmath}
 
 \setlist{nolistsep}
 
 % Allows fancy stuff in the page header
-\usepackage{fancyhdr}
-\pagestyle{fancy}
+%\usepackage{fancyhdr}
+%\pagestyle{fancy}
+
+\usepackage{listings}
+\lstset{
+	basicstyle=\ttfamily,
+	showstringspaces=false,
+	commentstyle=\color{red},
+	keywordstyle=\color{blue},
+	breaklines=true
+}
 
 % multirow and multicol
 \usepackage{multirow}
@@ -21,57 +35,170 @@
 \columnsep24pt
 \columnseprule0.1pt
 
-% parindent
-\parindent0px
-\parskip3pt
+% custom style
+\setlength\parindent{9pt}
+\setlength\parskip{0pt}
+\setlength\intextsep{0pt}  
+\captionsetup{belowskip=2pt,aboveskip=0pt}
 
-\geometry{top=1cm, headsep=0pt,headheight=0.5cm, % top part
+\geometry{top=0.5cm, headsep=0pt, headheight=0.5cm, % top part
 bottom=1cm, footskip=0.5cm, % bottom part
 left=0.4cm,right=0.4cm} % left / right part
 
-% fancy header
-\renewcommand{\footrulewidth}{0pt}
-\renewcommand{\headrulewidth}{0pt}
-\renewcommand{\headwidth}{\textwidth}
+% compact itemization 
+\setlist[enumerate, 1]{noitemsep,topsep=1pt,parsep=1pt,partopsep=1pt}
+\setlist[itemize, 1]{noitemsep,topsep=1pt,parsep=1pt,partopsep=1pt}
+\setlist[itemize, 2]{leftmargin=8pt,itemindent=0pt,noitemsep,topsep=1pt,parsep=1pt,partopsep=1pt}
 
-\tabcolsep=0.1cm
+\newenvironment{itemization}[1][\small]{%
+    \begin{itemize}[leftmargin=*]
+            #1
+        }{%
+    \end{itemize}
+}
+
+\newenvironment{myenumerate}[1][\small]{%
+    \begin{enumerate}[leftmargin=*]
+            #1
+        }{%
+    \end{enumerate}
+}
+
+\newcommand{\half}[3][\scriptsize]{%
+    #1
+    \begin{minipage}[t]{0.22\textwidth}
+        #2
+    \end{minipage}
+    \hfill
+    \vline
+    \hfill
+    \begin{minipage}[t]{0.22\textwidth}
+        #3
+    \end{minipage}
+}
+
+\newcommand{\rot}[1]{%
+    \rotatebox{90}{%
+        \kern-0.3em #1
+    }
+}
+
 
 % Redefine section commands to use less space
+\usepackage{sectsty}
 \makeatletter
-\renewcommand{\section}{\@startsection{section}{1}{0mm}%
-                                {-1ex plus -.5ex minus -.2ex}%
-                                {0.5ex plus .2ex}%x
-                                {\normalfont\large\bfseries}}
-\renewcommand{\subsection}{\@startsection{subsection}{2}{0mm}%
-                                {-1explus -.5ex minus -.2ex}%
-                                {0.5ex plus .2ex}%
-                                {\normalfont\normalsize\bfseries}}
-\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{0mm}%
-                                {-1ex plus -.5ex minus -.2ex}%
-                                {1ex plus .2ex}%
-                                {\normalfont\small\bfseries}}
+\renewcommand{\section}{%
+    \@startsection{section}{1}{0mm}%
+    {-1ex plus -.5ex minus -.2ex}%
+    {0.5ex plus .2ex}%x
+    {\normalfont\normalsize\bfseries\sectionrule{12pt}{0.4pt}{0pt}{0pt}}
+}
+
+\renewcommand{\subsection}{%
+    \@startsection{subsection}{2}{0mm}%
+    {-1explus -.5ex minus -.2ex}%
+    {0.5ex plus .2ex}%
+    {\normalfont\small\bfseries}
+}
+
+\renewcommand{\subsubsection}{%
+    \@startsection{subsubsection}{3}{0mm}%
+    {-1ex plus -.5ex minus -.2ex}%
+    {1ex plus .2ex}%
+    {\normalfont\scriptsize\bfseries}
+}
 \makeatother
 
 \usepackage{empheq}
 \begin{document}
+\begin{footnotesize}
+
+
 \twocolumn
 \newpage
 \setcounter{page}{1}
 \pagestyle{plain}
 
-\section{OSI model}
-\begin{table}[h]
-\begin{tabular}{llll}
-\textbf{Nr} & \textbf{Name} & \textbf{Protocols}      & \textbf{Data Unit} \\ \hline
-7           & Application   & HTTP, FTP, SMTP         & Data               \\ \hline
-6           & Presentation  & SSL/TLS, MIME           & Data               \\ \hline
-5           & Session       & SOCKS, RPC, PAP         & Data               \\ \hline
-4           & Transport     & TCP, UDP                & Segment            \\ \hline
-3           & Network       & IPv4, IPv6, IPsec, ICMP & Packet/Datagram    \\ \hline
-2           & Data Link     &                         & Bit/Frame          \\ \hline
-1           & Physical      &                         & Bit                \\ \hline
-\end{tabular}
-\end{table}
+\section{Network Models (OSI Layers / IP Stack)}
+    \begin{table}[h]
+        \scriptsize
+        \caption{OSI Layers}
+        \begin{tabular}{|llll|}
+            \hline
+            \textbf{Nr} & \textbf{Layer}    & \textbf{Protocols}      & \textbf{Data Unit} \\ \hline
+            7           & Application       & HTTP, FTP, SMTP         & Data               \\ \hline
+            6           & Presentation      & SSL/TLS, MIME           & Data               \\ \hline
+            5           & Session           & SOCKS, RPC, PAP         & Data               \\ \hline
+            4           & Transport         & TCP, UDP                & Segment            \\ \hline
+            3           & Network           & IPv4, IPv6, IPsec, ICMP & Packet/Datagram    \\ \hline
+            2           & Data Link         &                         & Bit/Frame          \\ \hline
+            1           & Physical          &                         & Bit                \\ \hline
+        \end{tabular}
+    \end{table}
+
+    \begin{table}[h]
+        \scriptsize
+        \caption{IP Protocol Stack}
+        \begin{tabular}{|lll|} \hline
+            \textbf{Nr} & \textbf{Layer}    & \textbf{Data Unit}    \\ \hline
+            4           & Application       & HTTP, FTP, DNS        \\ \hline
+            3           & Transport         & TCP, UDP              \\ \hline
+            2           & Internet          & IPv4, IPv6, Routing   \\ \hline
+            1           & Physical Network  & Ethernet, ADSL, WLan  \\ \hline
+        \end{tabular}
+    \end{table}
+        
+    \begin{table}[h]    
+        \scriptsize
+        \caption{Security at the different Layers}
+        \begin{tabular}{m{0.04\textwidth} | p{0.38\textwidth}}
+            \textbf{Layer} & \textbf{Advantages/\color{red}Disadvantages} \\
+            \hline
+            \rot{Link} &
+            \parbox{0.38\textwidth}{%
+                \begin{itemization}
+                \item speed 
+                \item seamless\footnote{nahtlos} security to layers above
+                    \color{red}
+                \item every link must be secured separately
+                \item requires trust in link operator
+                \end{itemization}}\\
+            \hline
+            \rot{Internet} &
+            \parbox{0.38\textwidth}{%
+                \begin{itemization}
+                \item seamless security to layers above
+                \item IPSec is integrated in IPv6, also available for IPv4
+                    \color{red}
+                \item complex configuration on multi-user machines
+                \item tunnel mode encrypts only part of a route
+                \item depends on policy settings (but also a strength)
+                \end{itemization}}\\
+            \hline
+            \rot{Transport} & 
+            \parbox{0.38\textwidth}{%
+                \begin{itemization}
+                \item can be added to existing applications to communicate securely 
+                \item more portable and easier to configure than internet layer security 
+                    \color{red}
+                \item protocol specific
+                \item application must be TLS/SSL aware
+                \end{itemization}}\\
+            \hline
+            \rot{Application} & 
+            \parbox{0.38\textwidth}{%
+                \begin{itemization}
+                \item extend application without involving operating system 
+                \item applications understand data and can provide appropriate security
+                    \color{red}
+                \item security bas to be designed separately for each application
+                \end{itemization}}\\
+        \end{tabular}
+    \end{table}
+    
+\section{TCP/UDP}
+\includegraphics[width=0.5\linewidth]{images/tcp}
+\includegraphics[width=0.5\linewidth]{images/udp}
 
 \section{SSL/TLS Key Exchange}
 \begin{description}
@@ -86,4 +213,696 @@ left=0.4cm,right=0.4cm} % left / right part
 \item[Ephemeral Diffie-Hellman] uses temporary, public keys. Each instance or run of the protocol uses a different public key. The authenticity of the server's temporary key can be verified by checking the signature on the key. Secure against passive/active attacks, PFS, contributory key agreement.
 \end{description}
 
+\includegraphics[width=0.4\linewidth]{images/tls}
+
+\textbf{Phase 1 - Establish security capabilities}: After phase 1 both parties know which key exchange mechanism and which cipher to use.
+
+\textbf{Phase 2 - Server authentication and key exchange}: After phase 2 the client has all required values to generate the \textbf{session key}.
+
+\textbf{Phase 3 - Client authentication and key exchange}: After phase 3 the client and server have authenticated each other and share \textbf{master secrete}.
+
+\textbf{Phase 4 - Finish}: After phase 4 the cipher suite is changed and the connection is established. Note that in XI. $C \rightarrow S$ a handshake message containing all messages up to now is sent to the server.
+
+\section{Attack Classification Steve Kent}
+\includegraphics[width=\linewidth]{images/attack_classification}
+
+\section{Reducing Risk}
+\begin{description}
+\item[Avoid]: Do not implement a feature and by that remove all risks that would be introduced by it.
+\item[Decrease]: Add implementations/hardware/etc. to reduce a risk (i.e. implement two factor authentication instead of one factor).
+\item[Insure]: Get an insurance against some of the risks.
+\item[Accept]: Accept a risk.
+\end{description}
+
+Opportunity should be larger than the finally accepted risk.
+
+\section{Vulnerability Lifecycle}
+\includegraphics[width=\linewidth]{images/vuln_lifecycle}
+
+\section{Botnet}
+\begin{description}
+\item[Bot Agent]: crime-ware tool installed on victims
+\item[Botnet]: collection of all bot agents
+\item[Bot Master]: the ciminal(s) operating the botnet
+\item[Command \& Control (CnC)]: botnet management system
+\end{description}
+
+\subsection{Targets}
+\begin{itemization}
+\item Buildup: efficient infection and spreading
+\item Persistence: prevent detection \& removal
+\item Modularity: address changing functionality needs
+\item Scalability: handle large number of machines
+\item Adaptive: to business and technology challenges
+\item Anonymity: prevent identification of operator
+\end{itemization}
+
+\subsection{Life Cycle}
+\begin{myenumerate}
+\item Computer is infected, becomes a bot agent
+\item New bot agent connects to CnC, joins the botnet
+\item Retrieve anti AV module
+\item Secure the new bot agent
+\item Listen to CnC, wait for command
+\item Retrieve new payload module
+\item Execute payload
+\item Report result to CnC channel
+\item Listen again to CnC
+\end{myenumerate}
+
+The command may result in the erase of all evidence and abandon client.
+While listening to CnC and executing the commands it's in the state ``Exploitation''. Before it's ``Initialization'' and the last one, that results in the erase of all evidence is ``Termination''.
+
+\subsection{Locating CnC}
+\begin{itemization}
+\item fixed IP: easy to identify bot agent, easy to identify CnC, no flexibility, easy to block botnet
+\item fixed Domain: easy to identify bot agent, harder to identify controller, harder to shut down botnet (DNS caches), more flexibility (fluxing)
+\item IP Flux/Domain Flux: domain name/IP addresses change frequently, very dynamic, moving target, hard to shut down botnet
+\item IP Flux: constantly change IP address for a fully-qualified domain name (FQDN)
+\item Domain Flux: constantly change and allocate multiple FQDN
+\item Fast-Flux: every 3 minutes map a given FQDN to a new set of IP addresses, bot agent connects to same FQDN but this results in a connection to another CnC every 3 minutes
+\item Single Flux: FQDN of CnC's host has multiple IP addresses assigned (DNS A record)
+\item Double Flux: name servers of the CnC's FQDN as well as the FQDN of the CnC's host have multiple IP addresses assigned (DNS A and NS records)
+\item Single Flux/Double Flux: uses DNS protocol features: round-robin allocation of IP addresses, very short TTL values
+\end{itemization}
+
+\subsubsection{Single Flux}
+\includegraphics[width=0.6\linewidth]{images/single_flux}
+\begin{myenumerate}
+\item Clients A, B resolve `cnc.botnet.com', both get same IP of the name server authoritative for `botnet.com'
+\item Clients A, B query `10.1.1.1' at different times and get different IPs for `cnc.botnet.com'
+\end{myenumerate}
+
+\subsubsection{Double Flux}
+\includegraphics[width=0.6\linewidth]{images/double-flux}
+\begin{myenumerate}
+\item Client A, B resolve `cnc.botnet.com', both get multiple different IPs of name server authoritative for `botnet.com'
+\item Clients A, B each query one of the NS, each NS returns multiple different IPs for `cnc.botnet.com'
+\end{myenumerate}
+
+\subsubsection{Domain Flux}
+\begin{itemization}
+\item each bot uses a Domain Generator Algorithm (DGA) to periodically compute a list of new domain names, this is computed independently by each bot and is regenerated periodically
+\item bot attempts to contact the generated host, until one succeeds
+\end{itemization}
+
+\subsection{CnC Topology}
+\begin{itemization}
+\item Star
+\begin{itemization}
+\item (pro) speed of control: commands and data can be transferred rapidly
+\item (con) single point of failure
+\item (con) bad scalability: hard to control large amount of bot agents with central CnC server
+\end{itemization}
+
+\item Multi-Server
+\begin{itemization}
+\item (pro) no single point of failure
+\item (pro) geographical optimization
+\item (con) advanced planning required
+\item (con) coordination of servers needed (P2P-like protocol between servers)
+\end{itemization}
+
+\item Hierarchical
+\begin{itemization}
+\item (pro) no single bot agent aware of the location of the entire botnet
+\item (pro) ease of resale: easily to sell part of the tree (sell subtree)
+\item (con) command latency: commands must trace sever branches
+\end{itemization}
+
+\item Random
+\begin{itemization}
+\item (pro) highly resilient
+\item (con) command latency
+\item (con) botnet enumeration: passive monitoring of one bot agent allows enumeration of other members
+\end{itemization}
+\end{itemization}
+
+\section{Malware}
+\subsection{Detection Evasion Tactics}
+\begin{itemization}
+\item Create unique samples of malware at massive scale
+\item Protect malware from analysis
+\item Detect sandboxing technologies
+\item Test detectability before deployment
+\item Serial Variants: process of automatically churning out new variants of malware on massive scale
+\item Tactics: multiple variants of a particular malware agent are created in advance of the attack
+\item Process: off-the-shelf commercial software protection tools and specialized anti-antivirus manipulation tools have standardized process
+\item Polymorphism Techniques: manipulate the structure of the source code (of malware) by reordering and replacing common programmatic routines with equivalent ones.
+\item Compiler Setting Modulation: change compiler settings to get different binaries with the same semantics
+\end{itemization}
+
+\subsection{Creation Steps}
+\begin{description}
+\item[Original Malware]: create core malicious functionality, buy or hire a coder
+\item[Crypter]: encrypt malware against signature detection systems and static analysis
+\item[Protector]: add anti-debugging features to malware that prevents analysis of it
+\item[Packers]: make a binary file and installation kits smaller and more portable
+\item[Binders]: used to embed a Trojan or other software packages
+\item[Quality Assurance]: Malware created is tested against AV software to verify its quality
+\end{description}
+
+\section{Authentication}
+\begin{description}
+\item[Things you know]: passwords, passphrases
+\item[Things you have]: credit card, security token (RSA SecurID)
+\item[Things you are]: fingerprint, voiceprint, retinal scans
+\end{description}
+
+\textbf{Weak authentication} uses only one of the above authentication criteria. \textbf{Strong authentication} uses two or more of them.
+
+\subsection{OpenID}
+\begin{itemization}
+\item open standard for decentralized user authentication
+\item use existing account on multiple websites
+\item only one account with one password enough
+\item password given and known only to \textit{identity provider}, which confirms identity to website
+\end{itemization}
+
+\includegraphics[width=\linewidth]{images/openid}
+
+\subsection{OAuth}
+\begin{itemization}
+\item privileges granted without sharing username and password
+\item user authenticates with service and grants access to another application he/she trusts
+\end{itemization}
+
+\includegraphics[width=\linewidth]{images/oauth}
+
+\subsection{IEEE 802.1x}
+\begin{itemization}
+\item client-server protocol to restrict devices from connecting to a network through publicly accessible ports
+\item data link layer protocol used for transporting high-level authentication protocol
+\item 802.1x EAP: authentication framework which supports multiple authentication methods
+\item limitations: MitM attacks, session hijacking
+\end{itemization}
+\includegraphics[width=\linewidth]{images/IEEE_802_1x}
+\begin{itemization}
+\item Un-Controlled channel for EAPOL (Extensible Authentication Protocol over LAN) only
+\item Controlled channel open after authorization.
+\end{itemization}
+
+\section{IPTables}
+\begin{itemization}
+\item INPUT: All packets destined for the host computer
+\item OUTPUT: All packets originating from the host computer
+\item FORWARD: All packets neither destined for nor originating from the host computer, but passing through (routed by) the host computer. Used if you are using host as a router.
+\item ACCEPT: accept the packet
+\item DROP: drop the packet on the floor
+\item QUEUE: hand the packet off to a user-space process (rarely used)
+\item RETURN: stop processing in this chain and resume in the previous chain (rarely used)
+\item MASQUERADE: only in nat table: rewrite source or destination address with address of outgoing or incoming interface
+\end{itemization}
+
+\begin{lstlisting}[language=bash,linewidth=\linewidth]
+# drop anything for INPUT chain as default (--policy same as -P)
+iptables --policy INPUT DROP
+
+# accept TCP packets with SYN flag to port 80 from any IP (-s) to any IP (-d)
+iptables -A INPUT -p tcp -s 0/0 -d 0/0 --destination-port 80 --syn -j ACCEPT
+
+# add to INPUT table: incoming packages on eth0 (-i) use "state" module, allow only packets belonging to or related to established connections
+iptables -A INPUT -i eth0 -m state --state ESTABLISHED,RELATED -j ACCEPT
+\end{lstlisting}
+
+\begin{itemization}
+\item \texttt{-s}: source (IP address, network address (IP address + mask), hostname)
+\item \texttt{-d}: destination (IP address, network address, hostname)
+\item \texttt{-j}: "jump to target": ACCEPT, DROP, QUEUE, RETURN
+\item \texttt{-i}: input interface name
+\item \texttt{-o}: output interface name
+\item \texttt{-p}: protocol: tcp, udp, icmp
+\item \texttt{--source-port}: number or name that is defined in \texttt{/etc/services}
+\item \texttt{--destination-port}: number or name as in \texttt{--source-port}
+\item \texttt{--tcp-flags}: ALL, NONE, SYN, ACK, FIN, RST, URG, PSH
+\end{itemization}
+
+\includegraphics[width=0.8\linewidth]{images/firewall0}
+\includegraphics[width=0.8\linewidth]{images/firewall1}
+
+\section{UDP Hole Punching}
+\includegraphics[width=0.8\linewidth]{images/hole_punching}
+
+\section{IDS/IPS}
+\begin{itemization}
+    \item {\it Object}\ of observation 
+        \begin{itemization}
+        \item \textbf{packet} - analysis of packet headers and content
+        \item \textbf{flow} - analysis of flow parameters (IP address, port, \# of packets, \# of bytes, timing parameters, \ldots)
+        \end{itemization}
+    \item {\it Point}\ of observation 
+        \begin{itemization}
+        \item \textbf{host} - by software running on the host, or device monitoring the host
+        \item \textbf{network} - by data collectors attached at strategic places in the network
+        \end{itemization}
+    \item {\it Method}\ of observation 
+        \begin{itemization}
+        \item \textbf{signature} - comparison of observed events against database containing signature of malicious events
+        \item \textbf{behavior} - detection of deviation from normal state; requires knowledge of ground truth
+        \end{itemization}
+    \end{itemization}
+    A \textbf{flow} is a sequence of packets with the same 5-Tuple: (src IP, src port,dst IP, dst port, protocol)
+
+    \half{%
+        \textbf{Network based IDS}
+        \begin{itemization}[\tiny]
+        \item easy to deploy
+        \item one sensor can monitor multiple machines
+        \item no context information, thus more false positives
+        \item protects unknown machines
+        \item performance issues
+        \end{itemization}
+    }{%
+        \textbf{Host based IDS}
+        \begin{itemization}[\tiny]
+        \item harder to deploy, because additional software on host required
+        \item one sensor per monitored machine
+        \item context information, thus less false positives
+        \end{itemization}
+    }
+
+    \half{%
+        \textbf{Signature based}
+        \begin{itemization}[\tiny]
+        \item precision due to database of signatures of malicious events, thus less false positives
+        \item not capable of detection unknown attacks, thus more false negatives 
+        \item automatic generation of signatures? still a research topic
+        \end{itemization}
+    }{%
+        \textbf{Behavior based}
+        \begin{itemization}[\tiny]
+        \item detection of unknown attacks via anomaly detection 
+        \item difficulty of establishing ground truth, what is ``normal''?
+        \item more false positives, potentially less false negatives
+        \item area of research
+        \end{itemization}
+    }
+
+    There exists several possibilities to attack and IDS.\ One of them is \textbf{flooding / resource exhaustion}, where resources are depleted until the IDS drops packets or crashes. Another is attacking the \textbf{algorithmic complexity} of an IDS by launching a dos. This enables other attacks to remain undetected.
+
+\section{SSH}
+\begin{itemization}
+\item Secure command shell
+\item Secure file transfer
+\item Data tunneling for TCP/IP applications
+\item Full negotiation of encryption, integrity, key exchange, compression and public key algorithm and format
+\item Runs on top of TCP, e.g. TCP SYN flood, TCP RST, bogus ICMP, TCP desynchronization
+\item Possible to do traffic analysis (amount of data, source, destination, timing, ...)
+\item Server authentication on first connection done by user (pinning server's key hash basically)
+\end{itemization}
+
+\subsection{Protocols}
+\begin{description}
+\item[SSH-CONN]ection protocol for connection protocol
+\item[SSH-AUTH]enication protocol for client authentication
+\begin{itemization}
+\item Authentication request, including username, method name and method-specific data in regard to authentication method to use, service name for access request
+\item AUTH method ``None'': returns list of names of available authentication methods
+\item AUTH method ``Public-key'': can be used to check if given user would be authorized to access account or to perform the authentication with key of user
+\item AUTH method ``Password'': performs password test, method used for specifics can be set (PAM, passwd, LDAP, Kerberos, ...)
+\item User authentication: server delegates responsibility for user authentication to client host
+\item Host authentication: server verifies identity of client host, not user. Used for batch jobs. Better than plain text password in scripts
+\end{itemization}
+\item[SSH-TRANS]port protocol for server authentication, confidentiality, integrity
+\begin{itemization}
+\item Algorithm negotiation
+\item Session key exchange
+\item Session ID
+\item Server authentication
+\item Encryption, integrity, data compression
+\end{itemization}
+\end{description}
+
+\section{Block Cipher Modes}
+\subsection{Electronic Codebook (ECB)}
+\includegraphics[width=0.6\linewidth]{images/ecb}
+\begin{itemization}
+\item (pro) simple to compute
+\item (con) traffic analysis yields which ciphertext blocks are equal, i.e. we know which plaintext blocks are equal
+\item (con) adversary may be able to guess part of plaintext: can decrypt parts of message if same ciphertext block occurs
+\item (con) adversary can replace blocks with other blocks
+\end{itemization}
+
+\subsection{Cipher Block Chaining (CBC)}
+\includegraphics[width=0.8\linewidth]{images/cbc}
+\begin{itemization}
+\item (pro) semantic security
+\item (pro/con) altered ciphertext only influences two blocks
+\end{itemization}
+
+\subsection{Cipher Feedback (CFB)}
+\includegraphics[width=0.8\linewidth]{images/cfb}
+\begin{itemization}
+\item (pro) semantic security
+\item (pro) altered ciphertext influences all following blocks
+\item (con) same vulnerabilities as any stream cipher
+\end{itemization}
+
+\subsection{Output Feedback (OFB)}
+\includegraphics[width=0.8\linewidth]{images/ofb}
+\begin{itemization}
+\item (pro) semantic security
+\item (con) altered ciphertext only influences single block
+\item (con) same vulnerabilities as any stream cipher
+\end{itemization}
+
+\subsection{Counter Mode (CTR)}
+\includegraphics[width=0.8\linewidth]{images/ctr}
+\begin{itemization}
+\item (pro) semantic security
+\item (con) altered ciphertext only influences single block
+\item (con) same vulnerabilities as any stream cipher
+\end{itemization}
+
+\section{Cryptographic Hash Functions}
+\begin{itemization}
+\item One-way: Given $y = H(x)$, cannot find $x'$ such that $H(x') = y$
+\item Weak collision resistance: Given $x$, cannot find $x' \neq x$ sucht that $H(x) = H(x')$
+\item Strong collision resistance: Cannot find $x \neq x'$ such that $H(x) = H(x')$
+\end{itemization}
+
+\section{IPSec}
+\includegraphics[width=0.6\linewidth]{images/ipsec}
+
+\section{Disclosure Debate}
+\begin{itemization}
+\item Full Disclosure (FD)
+\begin{itemization}
+\item vendor has strong incentive to release a fix
+\item all affected parties get the same information
+\end{itemization}
+
+\item Bug Secrecy
+\begin{itemization}
+\item if kept secret, nothing will happen
+\item likely to be found by other party that won't keep it secret
+\end{itemization}
+\end{itemization}
+
+\subsection{Incentives}
+\begin{itemization}
+\item Economics: vulnerability information has commercial value
+\item Ethics: minimizing risk for society?
+\item Resources: has the discoverer the resources (e.g. time) to manage the discovery, will it be compensated?
+\item Past Experience: e.g. how did the vendor react in the past?
+\item Publicity: is the discoverer interested in publicity
+\item Legal constraints: is discoverer bound by legal constraints in how to handle the vulnerability (law, employer, ...)
+\end{itemization}
+
+\subsection{Coordinated Disclosure}
+\begin{myenumerate}
+\item Vulnerability discovered
+\item Notify vendor: alert vendor in private, give vendor reasonable time to investigate issue
+\item Collaborate with vendor: technical details discussed, PoC, etc. Vendor develops patch
+\item Coordinated Disclosure: Path published at agreed date, discoverer credited for finding, discoverer published finding and cites patch
+\end{myenumerate}
+
+If any of the steps fails from the viewpoint of the discoverer, do full discloser.
+
+\section{Security Ecosystem}
+\begin{itemization}
+\item White Market: vulnerability bought and forwarded to vendor, followed by coordinated disclosure process.
+\item Black Market: vulnerability bought and exploited by cybercriminals and governments, no vendor notification
+\item Software vendors tend to be biased, not report full details and be reactive in regard to security issues and assess the risk
+\item Security community (MLs, blogs, tweets, etc.) is not always validated/rumoured, not a trusted source, inconsistent format, too technical for risk decisions
+\item Security Information Provider (SIP) Organizations \textit{monitoring} the primary sources of security information, \textit{validating} the content found and \textit{publish} their findings as security advisories in a \textit{consistent format}.
+\end{itemization}
+
+\section{Email Authentication}
+\subsection{DomainKeys Identified Mail (DKIM)}
+\begin{itemization}
+\item Sender's mail server signs a hash of the email message (some header fields and content) with sender's private key
+\item Receiver's mail server gets sender's public key from DNS text record and verifies signature
+\item Guarantees message integrity, sender authenticity
+\item Domain-level digital signature authentication framework
+\item Allows organizations to take responsibility for a message
+\item Owner of the private/public key pair asserts validity (using DNS text record)
+\item Compared to S/MIME / OpenPGP: email content is not encrypted in DKIM, DKIM tries to prevent phishing
+\end{itemization}
+
+\subsection{Sender Policy Framework (SPF)}
+\begin{itemization}
+\item Give domain owners way to declare which SMTP machines are legitimate for their domain
+\item Mitigates misdirected bounces (from forged emails), most emails with forged senders are spam
+\item Sender's domain owner publishes which machine are authorized to use their domain in the \texttt{SMTP HELO} and \texttt{MAIL FROM}
+\item All SMTP hosts must be listed from which a valid mail can be sent
+\end{itemization}
+
+\section{Email Spam}
+\begin{itemization}
+\item Penny Stocks Spam
+\begin{itemization}
+\item Criminal buys penny stock
+\item Criminal spams about ``hot'' stocks
+\item Recipients buy stocks from criminal, who controls the liquidity and pricing
+\item Criminal profits
+\end{itemization}
+
+\item Advance Fee Fraud (AFF)/Nigerian Money Scam
+\begin{itemization}
+\item Promise of large money sums, that must be correctly transferred
+\item Ask for personal details: postal address, phone/fax number, bank account details
+\item After answering, a never-ending series of banking fees/lawyer expenses must be paid to initiate money transfer (which never happens)
+\end{itemization}
+
+\item Work from Home / Mule Recruitment Spam
+\begin{itemization}
+\item Receive payments on own bank account (money from illegal activities of course)
+\item Keep 10%
+\item Get cash from bank account
+\item Transfer on by Western Union (money laundering mule)
+\end{itemization}
+
+\item Swiss Law
+\begin{itemization}
+\item Sending spam (email, SMS, etc.) is illegal if the message is sent from a sender based in Switzerland
+\item Revised FMG (Fernmelde-Gesetz) and UWG (Unlauteren Wettbewerb)
+\end{itemization}
+
+\item US Federal Can Spam Act
+\begin{itemization}
+\item commercial email must be identified as advertisement, and include sender's valid physical postal address
+\item email must give recipients an opt-out method
+\item prohibits deceptive subject lines
+\item bans false or misleading header information
+\end{itemization}
+
+\item European Union E-Commerce Guideline
+\item Austria: UWG (Unlauteren Wettbewerb), TKG (Telekommunikationsgesetz)
+\end{itemization}
+
+\subsection{Anti-Spam Techniques}
+\begin{itemization}
+\item Whitelisting: allow emails matching non spam criteria, e.g. sender
+\item Greylisting: defer initial email from same identification triple (IP sender address, email sender, recipient address), ut accept follow-up emails
+\item Blacklisting: reject emails matching spam criteria, e.g. realtime blacklists (RBL)
+
+\item Heuristical Content Filtering
+\begin{itemization}
+\item look at probable spam features in email content: weird use of fonts, tiled images, strange URLs, ...
+\item combine scores of all algorithms into overall score
+\item mark as spam if threshold reached
+\end{itemization}
+
+\item Statistical Content Filtering
+\begin{itemization}
+\item $P(spam | words) = P(words | spam) \cdot P(spam) / P(words)$
+\item Probability an email containing certain words is spam is equal to probability of those words showing up in any known spam email, times the probability that any email is spam, divided by probability of finding those words in any email
+\end{itemization}
+
+\item Distributed Checksum Clearinghouse (DCC): counts number of same email messages seen in the past. High counts are indication for mass mailings. Large email hosters can calculate easily this number
+
+\item File spam filtering
+\begin{itemization}
+\item use optical character recognition (OCR) to images, PDFs, etc. to extract text and filter the text
+\item use signature-based filters (hash the files)
+\end{itemization}
+
+\item Text filtering
+\begin{itemization}
+\item normalize content before filtering: HTML comments, HTML table alignments, white text on white background, tiny letters in between actual text
+\item misspellings in text (defeats Naïve Bayesian filter)
+\item URL with redirects to another URL (defeats blacklists)
+\end{itemization}
+\end{itemization}
+
+\subsection{Filtering at SMTP Time}
+\begin{itemization}
+\item deny while the email is handed over to the SMTP server
+\item deny after learning client's (sender's) IP address
+\item deny at HELO/EHLO
+\item deny sender (at MAIL FROM)
+\item deny recipient (at RCPT TO)
+\item deny begin/end of data (at DATA)
+\item (pro) cheap, fast, no long email body received or processed
+\item (con) not too much information available to decide if its really spam
+\end{itemization}
+
+\subsection{DNS Blacklists}
+\begin{itemization}
+\item query an IPv4 address against a DNS Blackist: check if \texttt{<ip-address>.<dns-blacklist-domain>} returns an A record, then it's blacklisted
+\item the same is possible with domains: \texttt{<domain>.<dns-blacklist-domain>}
+\end{itemization}
+
+\subsection{Realtime Blacklists}
+Differences between realtime blacklists:
+\begin{itemization}
+\item Operator
+\item Costs
+\item Goal
+\begin{itemization}
+\item hosts have done things proper SMTP servers don't do
+\item insecure CGI scripts allowing open relaying
+\item open proxy servers / single hop relays
+\item IP addresses sent spam to trap
+\item URLs found in spam emails
+\item illegal third-party exploits
+\item Domains confirmed by owner to not send emails
+\end{itemization}
+
+\item Nomination (how to get on the list)
+\begin{itemization}
+\item manual by admin of blacklist provider
+\item users submit
+\item spam trap
+\item request by host
+\item tested by trusted testers
+\item ... often not disclosed
+\end{itemization}
+
+\item Listing lifetime (how to get off the list)
+\begin{itemization}
+\item 5s - 20min, usually under a month
+\item until de-listing request
+\item temporary until spam stops
+\end{itemization}
+\end{itemization}
+
+\section{DNS Security}
+A \textbf{zone} (domain) is a collection of hostnames/IP pairs all manage together.
+
+A \textbf{name server} is a server that answers dns queries.
+
+An \textbf{authoritative name server} is a name server that knows the answer directly, since he is responsible for this zone. Authoritative name server could be controlled by a private entity.
+
+A \textbf{resolver} is the client part of the dns and resolves the domain names.
+
+A \textbf{recursive name server} is a name server and a resolver at once. Those types of name server finds the results for zones it's not authoritative for.
+
+A \textbf{stub resolver} is a small library, that forwards request to a recursive name server and is typically used by end-hosts.
+
+\textbf{DNSSEC} uses public-key cryptography to provide \textit{authenticity}, \textit{integrity} and \textit{backward compatibility}, but it does not provide \textit{confidentiality} and \textit{protection against DoS.}
+
+\section{XSS}
+\textbf{Same origin policy} defines access rights: A script can only access content and properties of a document loaded from the same origin as the document containing the script. Same origin means: protocol, hostname and port are the same, but only considering the source URL and ignoring the path. It's possible to have different origin on one page, for example by using iframes.
+
+A \textbf{Cross Site Scripting (XSS)} is an attack where an attacker uses xss vulnerability to inject code into a web page, and executes it in the victim's browser under the web site's domain. This way he might be able to hijack user session, deface web sites, introduce worms,\ldots 
+
+\textbf{Cross Site Request Forgery (XSRF)} is an attack that, where e form from one domain post a request to a different domain through an authenticated session. A malicious website could use a hidden iframe to automatically sends requests to a web service, where a user is currently logged in. E.g., reset the password. Such attacks are also known as blind \textbf{write-only attacks}, since the attacker is not able to read the users Cookie, but he could trigger the victim's browser to send it to the target web service.
+
+\textbf{Cross Site Script Inclusion (XSSI)} may occur, when a website $A$ includes a script from another one $B$. The loaded script is evaluated in the context of origin of $A$ and hence allows it to do some harm.
+
+\subsection{Susceptible infected susceptible Model (SIS)}
+\ldots is a biological Virus Propagation Model for a \textit{homogeneous network} with $N$ nodes. The three stages of worm spreding are \textit{pre-outbreak, free spreading, clean-up}.
+\begin{itemization}
+\item \textbf{$\rho(t)$} - fraction of infected nodes $\in [0,1]$ 
+\item \textbf{$\beta$} - infection rate of a node along each edge $\in [0,1]$
+\item \textbf{$\delta$} - cure rate of each node $\in [0,1]$
+\item \textbf{$k$} - numer of outgoing edges at each node $(\approx const), k < N$
+\end{itemization}
+\[\frac{d\rho(t)}{dt} = \beta*k*(1-\rho(t))*\rho(t) - \delta*\rho(t) \]
+\begin{itemization} 
+\item \textbf{Stationary Condition}, where $0=d\rho(t)/dt$
+\[\rho(t)=1 - \frac{\delta}{\beta*k}\ or\ \rho(t)=0 \]
+\item \textbf{Epidemic threshold}, $\rho(t),\ t\rightarrow\infty$, $\lambda = \frac{\delta}{\beta*k}$ 
+\end{itemization}
+
+\section{Identity and Authentication}
+An \textbf{identity} specifies a principal (a unique entity). e.g.\ individuals (person name), physical objects (computer, router, smart card, \ldots), logical objects (software, internet location, \ldots), groups of principals.
+
+\textbf{Identity theft} is a crime in which impostors obtain key pieces of PII and use them for their own personal gain or to do harm.
+
+\textbf{Personally Identifying Information (PII)}s are for example a social security numbers, i.e.\ birth date and driver's license number. \textit{Variants: Financial-, Criminal-, Business/Commercial Identity Theft \& Identity Cloning}
+
+\textbf{Authentication} is the process of verifying an identity claim of an entity. It binds the principal to an identity.\textbf{Weak authentication} means checking only one authentication criteria, while \textbf{strong authentication} means checking two or more.
+
+\section{Attacks and Defence}
+\begin{table}[h]
+        \centering
+        \scriptsize
+        \newcommand{\ad}[2]{%
+            {\color{red}#1} - {\color{blue}\textit{#2}} \\
+        }
+        \caption{Attacks and its Defence}
+        \begin{tabular}{|ll|} \hline
+            \parbox{0.07\textwidth}{\textbf{Service}} &
+            \parbox{0.38\textwidth}{\textbf{{\color{red}Attack}/{\color{blue}Defense}}} \\ \hline
+            \parbox{0.07\textwidth}{Anonymity, e.g., Tor, Mixnet} &
+            \parbox{0.38\textwidth}{%
+                \ad{Traceback}{add more proxise/nodes}
+                \ad{Collusion}{use a reputation system}
+                \ad{Traffic analysis}{heartbeats, traffic shaping, padding,\ldots}
+                \ad{Logging}{reset path periodically}
+            } \\ \hline
+            \parbox{0.07\textwidth}{Availability} &
+            \parbox{0.38\textwidth}{%
+                \ad{SYN flooding}{SYN Cookies}
+                \ad{Compression bomb}{restrict decompression size, limit depth}
+                \ad{Smurf attack}{}
+                \ad{mail bounce amplification}{}
+            } \\ \hline
+            \parbox{0.07\textwidth}{DNS} &
+            \parbox{0.38\textwidth}{%
+                \ad{(D)DoS}{redundancy, over provisioning}
+                \ad{web interface}{Update firmware, use strong passwords}
+                \ad{local host configuration, e.g., /etc/host}{}
+                \ad{DNS spoofing}{bailiwick checking, ignore any records that aren't in the same domain of the query}
+                \ad{Fast response}{source port randomization in combination with random TXID}
+                \ad{Cache poisoning}{''}
+                \ad{Kaminsky attack}{''}
+            } \\ \hline
+            \parbox{0.07\textwidth}{Email} &
+            \parbox{0.38\textwidth}{%
+                \ad{spam}{White-, Grey-, Blacklisting, Heuristical Content Filtering, Statistical Content filtering, Distributed checksum clearinghouse (DCC), File Spam-, Text filtering}
+            } \\ \hline
+            \parbox{0.07\textwidth}{Firewall, IDS/IPS} &
+            \parbox{0.38\textwidth}{%
+                \ad{flooding}{SYN Cookies}
+                \ad{algorithmic complexity}{}
+            } \\ \hline
+            \parbox{0.07\textwidth}{Session Mgmt} &
+            \parbox{0.38\textwidth}{%
+                \ad{Network sniffing}{use HTTPS instead}
+                \ad{brue force, potential DoS, lock all user accounts}{}
+            } \\ \hline
+            \parbox{0.07\textwidth}{SSH} &
+            \parbox{0.38\textwidth}{%
+                \ad{eavesdropping}{encryption in SSH-TRANS}
+                \ad{name service \& IP spoofing}{cryptographically verified server identity}
+                \ad{connection hijacking}{cannot prevent but detected on tcp level}
+                \ad{MitM attacks}{server authentication (first conn.)}
+                \ad{password cracking}{rather a social problem}
+                \ad{(D)DoS}{cannot counter}
+                \ad{traffic analysis, possible to watch data amount, src/dest, timing}{''}
+            } \\ \hline
+            \parbox{0.07\textwidth}{SSL} &
+            \parbox{0.38\textwidth}{%
+                \ad{MitM attacks}{compare URL with certificate}
+            } \\ \hline
+            \parbox{0.07\textwidth}{VPN} &
+            \parbox{0.38\textwidth}{%
+                \ad{replay attack}{embed a unique ID / timestamp before signing}
+            } \\ \hline
+            \parbox{0.07\textwidth}{Web Applications} &
+            \parbox{0.38\textwidth}{%
+                \ad{SQL-injection}{sanitize all client data \textbf{on the server}, prepared statements, avoid disclosing DB error infos, run DB with reduced privileges}
+                \ad{XSS}{Output encoding, Input validation}
+                \ad{XSRF}{Input validation, Security Token}
+                \ad{XSSI, direct sourcing}{DON'T}
+                \ad{XSSI, call-back}{Security Token}
+            } \\ \hline
+        \end{tabular}
+    \end{table}
+
+\end{footnotesize}
 \end{document}
